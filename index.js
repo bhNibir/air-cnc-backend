@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.send("Hi")
 })
 
-app.get('/get-home', (req, res) =>  {
+app.get('/all-homes', (req, res) =>  {
 
         client = new MongoClient(uri, { useNewUrlParser: true });
         client.connect(err => {
@@ -59,6 +59,7 @@ app.post('/add-home', (req, res) => {
 })
 
 app.listen(port , ()=> console.log(`Listen at http://localhost:${port}`))
+
 
 
 
