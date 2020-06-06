@@ -4,6 +4,7 @@ const port = process.env.PORT || 4000
 const cors = require('cors')
 const bodyParser = require('body-parser')
 require('dotenv').config()
+const uniqid = require('uniqid');
 
 //Database
 const MongoClient = require('mongodb').MongoClient;
@@ -38,7 +39,6 @@ app.get('/all-homes', (req, res) =>  {
     })
 
 app.get('/all-bookings', (req, res) =>  {
-
     client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
     const collection = client.db("air-cnc").collection("bookings");
@@ -59,7 +59,6 @@ app.get('/all-bookings', (req, res) =>  {
 
 app.post('/add-home', (req, res) => {
     const items = req.body
-
     client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
     const collection = client.db("air-cnc").collection("homes");
@@ -80,7 +79,7 @@ app.post('/add-home', (req, res) => {
 
 app.post('/add-booking', (req, res) => {
     const items = req.body
-
+    items.order_num = uniqid.time(items.user+"-#")
     client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
     const collection = client.db("air-cnc").collection("bookings");
