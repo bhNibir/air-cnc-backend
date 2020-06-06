@@ -56,6 +56,24 @@ app.get('/all-bookings', (req, res) =>  {
     });
 })
 
+app.get('/all-experiences', (req, res) =>  {
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+    const collection = client.db("air-cnc").collection("experiences");
+    collection.find().toArray((err, documents) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({message:err})
+            
+        }
+        else{
+            res.send(documents)
+        }
+    })
+    client.close();
+    });
+})
+
 
 app.post('/add-home', (req, res) => {
     const items = req.body
@@ -83,6 +101,26 @@ app.post('/add-booking', (req, res) => {
     client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
     const collection = client.db("air-cnc").collection("bookings");
+    collection.insert(items, (err, result) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({message:err})
+            
+        }
+        else{
+            res.send(result.ops[0])
+        }
+    })
+    client.close();
+    });
+})
+
+
+app.post('/add-experience', (req, res) => {
+    const items = req.body
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+    const collection = client.db("air-cnc").collection("experiences");
     collection.insert(items, (err, result) => {
         if(err){
             console.log(err);
