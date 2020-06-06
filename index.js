@@ -37,6 +37,25 @@ app.get('/all-homes', (req, res) =>  {
         });
     })
 
+app.get('/all-bookings', (req, res) =>  {
+
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+    const collection = client.db("air-cnc").collection("bookings");
+    collection.find().toArray((err, documents) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({message:err})
+            
+        }
+        else{
+            res.send(documents)
+        }
+    })
+    client.close();
+    });
+})
+
 
 app.post('/add-home', (req, res) => {
     const items = req.body
@@ -44,6 +63,27 @@ app.post('/add-home', (req, res) => {
     client = new MongoClient(uri, { useNewUrlParser: true });
     client.connect(err => {
     const collection = client.db("air-cnc").collection("homes");
+    collection.insert(items, (err, result) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({message:err})
+            
+        }
+        else{
+            res.send(result.ops[0])
+        }
+    })
+    client.close();
+    });
+})
+
+
+app.post('/add-booking', (req, res) => {
+    const items = req.body
+
+    client = new MongoClient(uri, { useNewUrlParser: true });
+    client.connect(err => {
+    const collection = client.db("air-cnc").collection("bookings");
     collection.insert(items, (err, result) => {
         if(err){
             console.log(err);
